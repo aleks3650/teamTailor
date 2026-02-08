@@ -1,13 +1,21 @@
+const testBtn = document.getElementById('test-btn');
+const state = document.getElementById('state');
 
-const getCandidatesButton = document.getElementById("get-candidates");
-const candidatesDiv = document.getElementById("candidates");
+testBtn.addEventListener('click', async () => {
+    testBtn.disabled = true;
+    state.className = 'loading';
+    state.textContent = 'Connecting to API...';
 
-getCandidatesButton.addEventListener("click", () => {
-    fetch("http://localhost:3000/candidates")
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-            candidatesDiv.innerHTML = data.message;
-        })
-        .catch((error) => console.error(error));
+    try {
+        const response = await fetch('http://localhost:3000/api/test');
+        const data = await response.json();
+
+        state.className = 'success';
+        state.textContent = `found ${data.candidatesCount} candidates, on ${data.jobApplicationsCount} job applications`;
+    } catch (error) {
+        state.className = 'error';
+        state.textContent = 'Connection error: ' + error.message;
+    } finally {
+        testBtn.disabled = false;
+    }
 });
