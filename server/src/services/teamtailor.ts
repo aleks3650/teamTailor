@@ -36,7 +36,7 @@ export async function fetchAllCandidates(): Promise<{
     const allCandidates: Candidate[] = [];
     const allJobApplications: JobApplication[] = [];
 
-    let nextUrl: string | undefined = "/candidates?include=job-applications";
+    let nextUrl: string | undefined = "/candidates?include=job-applications&page[size]=30";
 
     while (nextUrl) {
         const page = await fetchPage(nextUrl);

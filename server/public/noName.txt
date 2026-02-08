@@ -1,0 +1,215 @@
+Last login: Fri Feb  6 23:36:49 on ttys008
+➜  ~ curl -s \
+  -H "Authorization: Token token=xxx" \
+  -H "X-Api-Version: 20240404" \
+  -H "Content-Type: application/vnd.api+json" \
+  "https://api.teamtailor.com/v1/candidates/25235351?include=job-applications" | jq .
+{
+  "data": {
+    "id": "25235351",
+    "type": "candidates",
+    "links": {
+      "self": "https://api.teamtailor.com/v1/candidates/25235351"
+    },
+    "attributes": {
+      "connected": false,
+      "consent-future-jobs-at": null,
+      "created-at": "2019-10-01T09:15:20.654+02:00",
+      "email": "_33_sandbox_teamtailor_developer@example.com",
+      "facebook-id": null,
+      "first-name": null,
+      "internal": false,
+      "last-name": null,
+      "linkedin-uid": null,
+      "linkedin-url": null,
+      "original-resume": null,
+      "phone": "79008902559",
+      "picture": null,
+      "pitch": null,
+      "referring-site": null,
+      "referring-url": null,
+      "referred": false,
+      "resume": null,
+      "resume-summary": null,
+      "resume-updated-at": null,
+      "sourced": false,
+      "unsubscribed": false,
+      "updated-at": "2024-08-28T09:32:22.022+02:00",
+      "restricted-at": null,
+      "profile-url": "https://app.teamtailor.com/companies/Bao7we3qCCw@eu/candidates/segment/all/candidate/25235351",
+      "facebook-profile": null,
+      "linkedin-profile": null,
+      "tags": []
+    },
+    "relationships": {
+      "activities": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/activities",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/activities"
+        }
+      },
+      "division": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/division",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/division"
+        }
+      },
+      "department": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/department",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/department"
+        }
+      },
+      "role": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/role",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/role"
+        }
+      },
+      "regions": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/regions",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/regions"
+        }
+      },
+      "job-applications": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/job-applications",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/job-applications"
+        },
+        "data": [
+          {
+            "type": "job-applications",
+            "id": "29305142"
+          }
+        ]
+      },
+      "questions": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/questions",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/questions"
+        }
+      },
+      "answers": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/answers",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/answers"
+        }
+      },
+      "locations": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/locations",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/locations"
+        }
+      },
+      "uploads": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/uploads",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/uploads"
+        }
+      },
+      "custom-field-values": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/custom-field-values",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/custom-field-values"
+        }
+      },
+      "partner-results": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/partner-results",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/partner-results"
+        }
+      },
+      "nps-responses": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/nps-responses",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/nps-responses"
+        }
+      },
+      "form-answers": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/form-answers",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/form-answers"
+        }
+      },
+      "onboardings": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/onboardings",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/onboardings"
+        }
+      },
+      "interviews": {
+        "links": {
+          "self": "https://api.teamtailor.com/v1/candidates/25235351/relationships/interviews",
+          "related": "https://api.teamtailor.com/v1/candidates/25235351/interviews"
+        }
+      }
+    }
+  },
+  "included": [
+    {
+      "id": "29305142",
+      "type": "job-applications",
+      "links": {
+        "self": "https://api.teamtailor.com/v1/job-applications/29305142"
+      },
+      "attributes": {
+        "cover-letter": null,
+        "created-at": "2022-03-22T15:59:13.646+01:00",
+        "match": null,
+        "referring-site": null,
+        "referring-url": null,
+        "rejected-at": null,
+        "row-order": 0,
+        "sourced": false,
+        "updated-at": "2025-07-09T16:41:45.144+02:00",
+        "changed-stage-at": "2022-03-22T15:59:13.636+01:00"
+      },
+      "relationships": {
+        "candidate": {
+          "links": {
+            "self": "https://api.teamtailor.com/v1/job-applications/29305142/relationships/candidate",
+            "related": "https://api.teamtailor.com/v1/job-applications/29305142/candidate"
+          }
+        },
+        "job": {
+          "links": {
+            "self": "https://api.teamtailor.com/v1/job-applications/29305142/relationships/job",
+            "related": "https://api.teamtailor.com/v1/job-applications/29305142/job"
+          }
+        },
+        "stage": {
+          "links": {
+            "self": "https://api.teamtailor.com/v1/job-applications/29305142/relationships/stage",
+            "related": "https://api.teamtailor.com/v1/job-applications/29305142/stage"
+          }
+        },
+        "reject-reason": {
+          "links": {
+            "self": "https://api.teamtailor.com/v1/job-applications/29305142/relationships/reject-reason",
+            "related": "https://api.teamtailor.com/v1/job-applications/29305142/reject-reason"
+          }
+        },
+        "promotion": {
+          "links": {
+            "self": "https://api.teamtailor.com/v1/job-applications/29305142/relationships/promotion",
+            "related": "https://api.teamtailor.com/v1/job-applications/29305142/promotion"
+          }
+        },
+        "nps-responses": {
+          "links": {
+            "self": "https://api.teamtailor.com/v1/job-applications/29305142/relationships/nps-responses",
+            "related": "https://api.teamtailor.com/v1/job-applications/29305142/nps-responses"
+          }
+        },
+        "movements": {
+          "links": {
+            "self": "https://api.teamtailor.com/v1/job-applications/29305142/relationships/movements",
+            "related": "https://api.teamtailor.com/v1/job-applications/29305142/movements"
+          }
+        }
+      }
+    }
+  ]
+}
+➜  ~ 

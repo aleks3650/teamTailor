@@ -1,21 +1,28 @@
-const testBtn = document.getElementById('test-btn');
+const btn = document.getElementById('download-btn');
 const state = document.getElementById('state');
 
-testBtn.addEventListener('click', async () => {
-    testBtn.disabled = true;
-    state.className = 'loading';
-    state.textContent = 'Connecting to API...';
+btn.onclick = async () => {
+    btn.disabled = true;
+    state.textContent = 'Generating CSV…';
 
     try {
-        const response = await fetch('http://localhost:3000/api/test');
-        const data = await response.json();
+        const res = await fetch('http://localhost:3000/api/candidates/export');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        state.className = 'success';
-        state.textContent = `found ${data.candidatesCount} candidates, on ${data.jobApplicationsCount} job applications`;
-    } catch (error) {
-        state.className = 'error';
-        state.textContent = 'Connection error: ' + error.message;
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `candidates_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+
+        URL.revokeObjectURL(url);
+        const total = res.headers.get('X-Total-Rows');
+        state.textContent = `Done (${total} rows)`;
+    } catch (err) {
+        state.textContent = `Error: ${err.message}`;
     } finally {
-        testBtn.disabled = false;
+        btn.disabled = false;
     }
-});
+};

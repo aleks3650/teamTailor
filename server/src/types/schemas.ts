@@ -42,10 +42,15 @@ export const JobApplicationSchema = ApiJobApplicationSchema.transform((api) => (
     createdAt: api.attributes["created-at"],
 }));
 
+const ApiIncludedResourceSchema = z.object({
+    id: z.string(),
+    type: z.string(),
+}).loose();
+
 export const CandidatesResponseSchema = z
     .object({
         data: z.array(ApiCandidateSchema),
-        included: z.array(ApiJobApplicationSchema).optional(),
+        included: z.array(ApiIncludedResourceSchema).optional(),
         meta: z.object({
             "record-count": z.number(),
             "page-count": z.number(),
@@ -54,15 +59,21 @@ export const CandidatesResponseSchema = z
             next: z.string().optional(),
         }),
     })
-    .transform((api) => ({
-        candidates: api.data.map((candidate) => CandidateSchema.parse(candidate)),
-        jobApplications: (api.included ?? []).map((jobApplication) => JobApplicationSchema.parse(jobApplication)),
-        meta: {
-            recordCount: api.meta["record-count"],
-            pageCount: api.meta["page-count"],
-        },
-        nextPage: api.links.next,
-    }));
+    .transform((api) => {
+        const jobAppResources = (api.included ?? [])
+            .filter((r) => r.type === "job-applications");
+        return {
+            candidates: api.data.map((candidate) => CandidateSchema.parse(candidate)),
+            jobApplications: jobAppResources.map((jobApplication) =>
+                JobApplicationSchema.parse(jobApplication)
+            ),
+            meta: {
+                recordCount: api.meta["record-count"],
+                pageCount: api.meta["page-count"],
+            },
+            nextPage: api.links.next,
+        };
+    });
 
 export type Candidate = z.infer<typeof CandidateSchema>;
 export type JobApplication = z.infer<typeof JobApplicationSchema>;
