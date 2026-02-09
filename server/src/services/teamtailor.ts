@@ -1,12 +1,14 @@
+import pLimit from "p-limit";
 import axios from "axios";
 import { env } from "../config/env.js";
+import { API_VERSION, PAGE_SIZE, CONCURRENT_REQUESTS, REQUEST_TIMEOUT } from "../config/constants.js";
+import { withRetry } from "../utils/index.js";
 import {
     CandidatesResponseSchema,
     type Candidate,
     type JobApplication,
+    type CandidatesResponse,
 } from "../types/index.js";
-
-const API_VERSION = "20240404";
 
 const headers = {
     Authorization: `Token token=${env.TEAMTAILOR_API_KEY}`,
@@ -16,37 +18,49 @@ const headers = {
 
 const client = axios.create({
     baseURL: env.TEAMTAILOR_API_URL,
-    timeout: 30000,
+    timeout: REQUEST_TIMEOUT,
     headers,
 });
 
-async function fetchPage(url: string) {
-    const isFullUrl = url.startsWith("http");
-    const response = isFullUrl
-        ? await axios.get(url, { headers, timeout: 30000 })
-        : await client.get(url);
-
-    return CandidatesResponseSchema.parse(response.data);
+async function fetchPage(path: string): Promise<CandidatesResponse> {
+    return withRetry(async () => {
+        const response = await client.get(path);
+        return CandidatesResponseSchema.parse(response.data);
+    });
 }
 
 export async function fetchAllCandidates(): Promise<{
     candidates: Candidate[];
     jobApplications: JobApplication[];
 }> {
-    const allCandidates: Candidate[] = [];
-    const allJobApplications: JobApplication[] = [];
+    const firstPage = await fetchPage(`/candidates?include=job-applications&page[size]=${PAGE_SIZE}`);
 
-    let nextUrl: string | undefined = "/candidates?include=job-applications&page[size]=30";
+    const allCandidates: Candidate[] = [...firstPage.candidates];
+    const allJobApplications: JobApplication[] = [...firstPage.jobApplications];
+    const totalPages = firstPage.meta.pageCount;
 
-    while (nextUrl) {
-        const page = await fetchPage(nextUrl);
+    if (totalPages <= 1) {
+        return { candidates: allCandidates, jobApplications: allJobApplications };
+    }
 
+    const pageUrls: string[] = [];
+    for (let page = 2; page <= totalPages; page++) {
+        pageUrls.push(`/candidates?include=job-applications&page[size]=${PAGE_SIZE}&page[number]=${page}`);
+    }
+
+    const limit = pLimit(CONCURRENT_REQUESTS);
+    const pagePromises = pageUrls.map((url) =>
+        limit(async () => {
+            const page = await fetchPage(url);
+            return page;
+        })
+    );
+
+    const pages = await Promise.all(pagePromises);
+
+    for (const page of pages) {
         allCandidates.push(...page.candidates);
         allJobApplications.push(...page.jobApplications);
-
-        console.log(`Fetched ${allCandidates.length}/${page.meta.recordCount}`);
-
-        nextUrl = page.nextPage;
     }
 
     return { candidates: allCandidates, jobApplications: allJobApplications };

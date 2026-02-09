@@ -1,5 +1,6 @@
 import { stringify } from "csv-stringify/sync";
 import type { Candidate, JobApplication, CandidateCsvRow } from "../types/index.js";
+import { CSV_HEADERS } from "../config/constants.js";
 
 export function buildCsvRows(
     candidates: Candidate[],
@@ -10,7 +11,7 @@ export function buildCsvRows(
     const rows: CandidateCsvRow[] = [];
 
     for (const candidate of candidates) {
-        if (candidate.jobApplicationIds.length === 0) {
+        if (!candidate.jobApplicationIds.length) {
             rows.push({
                 candidateId: candidate.id,
                 firstName: candidate.firstName ?? "",
@@ -37,15 +38,6 @@ export function buildCsvRows(
 
     return rows;
 }
-
-const CSV_HEADERS: (keyof CandidateCsvRow)[] = [
-    "candidateId",
-    "firstName",
-    "lastName",
-    "email",
-    "jobApplicationId",
-    "jobApplicationCreatedAt",
-];
 
 export function generateCsv(rows: CandidateCsvRow[]): string {
     return stringify(rows, {

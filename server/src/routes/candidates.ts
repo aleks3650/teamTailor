@@ -1,10 +1,11 @@
 import { Router } from "express";
+import type { RequestHandler } from "express";
 import { fetchAllCandidates } from "../services/teamtailor.js";
 import { buildCsvRows, generateCsv } from "../services/csv.js";
 
 export const candidatesRouter = Router();
 
-candidatesRouter.get("/export", async (req, res) => {
+const exportHandler: RequestHandler = async (_req, res, next) => {
     try {
         const { candidates, jobApplications } = await fetchAllCandidates();
         const rows = buildCsvRows(candidates, jobApplications);
@@ -18,7 +19,8 @@ candidatesRouter.get("/export", async (req, res) => {
         res.setHeader("Access-Control-Expose-Headers", "X-Total-Rows");
         res.send(csv);
     } catch (error) {
-        console.error("Export error:", error);
-        res.status(500).json({ error: "Failed to export candidates" });
+        next(error);
     }
-});
+};
+
+candidatesRouter.get("/export", exportHandler);

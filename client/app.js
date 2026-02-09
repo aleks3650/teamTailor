@@ -1,12 +1,15 @@
 const btn = document.getElementById('download-btn');
+const btnText = document.getElementById('btn-text');
 const state = document.getElementById('state');
 
 btn.onclick = async () => {
     btn.disabled = true;
-    state.textContent = 'Generating CSV…';
+    btnText.textContent = 'Generating...';
+    state.className = 'loading';
+    state.innerHTML = '<span class="spinner"></span>Fetching candidates...';
 
     try {
-        const res = await fetch('http://localhost:3000/api/candidates/export');
+        const res = await fetch('http://localhost:3000/candidates/export');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const blob = await res.blob();
@@ -19,10 +22,13 @@ btn.onclick = async () => {
 
         URL.revokeObjectURL(url);
         const total = res.headers.get('X-Total-Rows');
-        state.textContent = `Done (${total} rows)`;
+        state.className = 'success';
+        state.textContent = `Downloaded ${total} rows successfully!`;
     } catch (err) {
+        state.className = 'error';
         state.textContent = `Error: ${err.message}`;
     } finally {
         btn.disabled = false;
+        btnText.textContent = 'Download CSV';
     }
 };

@@ -5,9 +5,6 @@ dotenv.config();
 
 const envSchema = z.object({
     PORT: z.string().default("3000").transform(Number),
-    NODE_ENV: z
-        .enum(["development", "production", "test"])
-        .default("development"),
     TEAMTAILOR_API_KEY: z.string().min(1, "TEAMTAILOR_API_KEY is required"),
     TEAMTAILOR_API_URL: z
         .string()
