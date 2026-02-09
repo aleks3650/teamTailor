@@ -62,7 +62,7 @@ server/
 │   ├── middleware/    # Error handling
 │   ├── types/         # Zod schemas & types
 │   └── utils/         # Retry logic
-└── __tests__/         # Unit tests
+│   └── __tests__/     # Unit tests
 ```
 
 ### Key Design Decisions
