@@ -1,13 +1,15 @@
 # TeamTailor Candidate Export
 
-A Node.js web application that exports candidates and their job applications from the TeamTailor API to a CSV file.
+A full-stack web application that exports candidates and their job applications from the TeamTailor API to a CSV file.
 
 ## Features
 
 - **Fast parallel fetching** with configurable concurrency limits
 - **CSV export** with candidate and job application data
+- **Live data preview** with candidate table before downloading
 - **Automatic retry** with exponential backoff for API failures
-- **Type-safe** with Zod schema validation
+- **Type-safe** with Zod schema validation and TypeScript
+- **Dark mode** with system preference detection
 - **Docker ready** with docker-compose
 
 ## Quick Start
@@ -19,10 +21,10 @@ cd server
 cp .env.example .env # Add your API key
 cd ..
 
-# Start both server and client
 docker-compose up --build
 
-# Open http://localhost:4000 in your browser
+# Server: http://localhost:3000
+# Client: http://localhost:4000 or http://localhost:5173 if you run client manually
 ```
 
 ### Manual Setup
@@ -36,20 +38,36 @@ npm run dev
 
 # Client (new terminal)
 cd client
-npx serve -l 4000
+npm install
+npm run dev
 ```
 
 ## Tech Stack
 
+### Backend
+
 | Layer | Technology |
 |-------|------------|
-| Runtime | Node.js 24 |
+| Runtime | Node.js |
 | Framework | Express |
 | Language | TypeScript |
 | Validation | Zod |
 | HTTP Client | Axios |
 | Testing | Vitest |
-| Containerization | Docker |
+
+### Frontend
+
+| Layer | Technology |
+|-------|------------|
+| Framework | React 19 |
+| Build Tool | Vite |
+| Language | TypeScript |
+| Data Fetching | TanStack Query |
+| Query Keys | @lukemorales/query-key-factory |
+| Styling | Tailwind CSS 4 |
+| Components | shadcn/ui (Radix primitives) |
+| Animations | Framer Motion |
+| Icons | Lucide React |
 
 ## Architecture
 
@@ -59,10 +77,20 @@ server/
 │   ├── config/        # Environment & constants
 │   ├── routes/        # Express routes
 │   ├── services/      # Business logic (API, CSV)
-│   ├── middleware/    # Error handling
+│   ├── middleware/     # Error handling
 │   ├── types/         # Zod schemas & types
-│   └── utils/         # Retry logic
+│   ├── utils/         # Retry logic
 │   └── __tests__/     # Unit tests
+
+client/
+├── src/
+│   ├── api/           # API routes, functions, query keys
+│   ├── components/    # UI components (CandidateTable, DownloadButton, ThemeToggle)
+│   │   └── ui/        # shadcn/ui primitives
+│   ├── hooks/         # TanStack Query hooks
+│   ├── lib/           # Config & utilities
+│   ├── providers/     # QueryProvider, ThemeProvider
+│   └── types/         # Shared TypeScript types
 ```
 
 ### Key Design Decisions
@@ -75,6 +103,7 @@ server/
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
+| GET | `/candidates` | Returns candidates as JSON |
 | GET | `/candidates/export` | Downloads CSV with all candidates |
 | GET | `/health` | Health check endpoint |
 
@@ -91,13 +120,23 @@ server/
 
 ## Scripts
 
+### Server
+
 ```bash
 npm run dev        # Development server with hot reload
 npm run build      # Build TypeScript
 npm run test       # Run tests in watch mode
 npm run test:run   # Run tests once
-npm run lint       # ESLint
 npm run typecheck  # TypeScript check
+```
+
+### Client
+
+```bash
+npm run dev        # Vite dev server
+npm run build      # Production build
+npm run preview    # Preview production build
+npm run lint       # ESLint
 ```
 
 ## AI Usage Disclosure

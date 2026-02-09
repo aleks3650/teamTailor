@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import { AxiosError } from "axios";
 import { AppError } from "../errors/index.js";
 
-export const errorHandler: ErrorRequestHandler = (err, _req, res) => {
+export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     if (err instanceof AppError) {
         return res.status(err.status).json({
             error: err.code,

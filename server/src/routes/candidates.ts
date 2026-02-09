@@ -5,6 +5,16 @@ import { buildCsvRows, generateCsv } from "../services/csv.js";
 
 export const candidatesRouter = Router();
 
+const listHandler: RequestHandler = async (_req, res, next) => {
+    try {
+        const { candidates, jobApplications } = await fetchAllCandidates();
+        const rows = buildCsvRows(candidates, jobApplications);
+        res.json(rows);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const exportHandler: RequestHandler = async (_req, res, next) => {
     try {
         const { candidates, jobApplications } = await fetchAllCandidates();
@@ -23,4 +33,6 @@ const exportHandler: RequestHandler = async (_req, res, next) => {
     }
 };
 
+candidatesRouter.get("/", listHandler);
 candidatesRouter.get("/export", exportHandler);
+
