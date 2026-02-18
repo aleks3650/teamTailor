@@ -12,6 +12,7 @@ import { useCandidates } from "@/hooks";
 import { formatDate } from "@/lib/utils";
 import type { CandidateRow } from "@/types";
 import { motion } from "framer-motion";
+import { Button } from "./ui/button";
 
 function TableSkeleton() {
     return (
@@ -45,6 +46,7 @@ export function CandidateTable() {
             </div>
         );
     }
+    console.log(candidates)
 
     return (
         <div className="rounded-md border overflow-hidden">
@@ -71,6 +73,11 @@ export function CandidateTable() {
                                 {!row.firstName && !row.lastName && (
                                     <span className="text-muted-foreground">No name</span>
                                 )}
+                            </TableCell>
+                            <TableCell className="font-medium" >
+                                <Button onClick={() => { }}>
+                                    View
+                                </Button>
                             </TableCell>
                             <TableCell>
                                 {row.email || <span className="text-muted-foreground">—</span>}

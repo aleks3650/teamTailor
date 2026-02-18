@@ -20,12 +20,17 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     }
 
     if (err instanceof AxiosError) {
-        return res.status(502).json({
+        const status = err.response?.status || 502;
+        // console.log(err.response?.headers);
+        const message = err.response?.data?.message || 'External service failed';
+
+        return res.status(status).json({
             error: 'API_ERROR',
-            message: 'External service failed',
+            message,
         });
     }
 
+    console.log(err);
     return res.status(500).json({
         error: 'INTERNAL_ERROR',
         message: 'Something went wrong',

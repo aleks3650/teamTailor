@@ -1,7 +1,8 @@
 import { Router } from "express";
 import type { RequestHandler } from "express";
-import { fetchAllCandidates } from "../services/teamtailor.js";
+import { fetchAllCandidates, fetchOneCandidate } from "../services/teamtailor.js";
 import { buildCsvRows, generateCsv } from "../services/csv.js";
+import { z } from "zod";
 
 export const candidatesRouter = Router();
 
@@ -33,6 +34,24 @@ const exportHandler: RequestHandler = async (_req, res, next) => {
     }
 };
 
+const oneCandidateHandler: RequestHandler = async (req, res, next) => {
+    try {
+        const schema = z.object({
+            id: z.string(),
+        });
+
+        const parsed = schema.parse(req.params);
+        const id = parsed.id
+
+        const candidate = await fetchOneCandidate(id);
+        return res.json(candidate)
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 candidatesRouter.get("/", listHandler);
+candidatesRouter.get("/:id", oneCandidateHandler);
 candidatesRouter.get("/export", exportHandler);
 
